@@ -1,0 +1,143 @@
+/* ========== GENERAL STYLES ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========== GLASS CARD CONTAINER ========== */
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 40px;
+    width: 90%;
+    max-width: 600px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    color: #fff;
+    animation: fadeIn 1s ease;
+}
+
+h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.tagline {
+    font-size: 15px;
+    color: #dcdcdc;
+    margin-bottom: 30px;
+}
+
+/* ========== FILE INPUT ========== */
+.file-input input {
+    display: none;
+}
+
+.file-input label {
+    display: inline-block;
+    background: linear-gradient(90deg, #36d1dc, #5b86e5);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 30px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.file-input label:hover {
+    background: linear-gradient(90deg, #5b86e5, #36d1dc);
+    transform: scale(1.05);
+}
+
+/* ========== BUTTON ========== */
+.btn {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    color: #fff;
+    border: none;
+    padding: 12px 35px;
+    border-radius: 30px;
+    cursor: pointer;
+    margin-top: 25px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(90deg, #2575fc, #6a11cb);
+}
+
+/* ========== LOADER ========== */
+.hidden {
+    display: none;
+}
+
+.loader {
+    margin-top: 25px;
+}
+
+.spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #36d1dc;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ========== RESULT BOX ========== */
+.result-box {
+    margin-top: 25px;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 20px;
+    border-radius: 10px;
+    color: #f1f1f1;
+    animation: fadeInUp 1s ease;
+}
+
+.result-box h2 {
+    color: #00e6ff;
+    margin-bottom: 10px;
+}
+
+#summaryText {
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* ========== ANIMATIONS ========== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,6 @@
+Flask
+moviepy
+openai-whisper
+transformers
+torch
+werkzeug

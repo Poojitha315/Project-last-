@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Video Summary Generator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="wrapper">
+        <div class="glass-card">
+            <h1>🎬 AI Video Summary Generator</h1>
+            <p class="tagline">Upload a video and get an automatic summary — powered by AI</p>
+
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="file-input">
+                    <input type="file" name="video" id="videoInput" accept="video/*" required>
+                    <label for="videoInput">📁 Choose a Video File</label>
+                </div>
+                <button type="submit" class="btn">Generate Summary</button>
+            </form>
+
+            <div id="loading" class="hidden loader">
+                <div class="spinner"></div>
+                <p>Analyzing your video... Please wait ⏳</p>
+            </div>
+
+            <div id="result" class="hidden result-box">
+                <h2>📝 Video Summary</h2>
+                <p id="summaryText"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const summaryText = document.getElementById('summaryText');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            loading.classList.remove('hidden');
+            result.classList.add('hidden');
+
+            try {
+                const response = await fetch('/upload', { method: 'POST', body: formData });
+                const data = await response.json();
+                loading.classList.add('hidden');
+
+                if (data.error) {
+                    summaryText.textContent = "❌ Error: " + data.error;
+                } else {
+                    summaryText.textContent = data.summary;
+                }
+
+                result.classList.remove('hidden');
+            } catch (err) {
+                loading.classList.add('hidden');
+                summaryText.textContent = "⚠️ Something went wrong. Try again.";
+                result.classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
