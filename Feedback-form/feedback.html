@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - AccessMeet</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        h1 { 
+            color: #2196F3; 
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .form-group { 
+            margin: 25px 0; 
+        }
+        
+        label { 
+            display: block; 
+            margin-bottom: 10px; 
+            font-weight: 600; 
+            color: #333;
+            font-size: 15px;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+        
+        textarea { 
+            min-height: 120px; 
+            resize: vertical;
+        }
+        
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+        
+        select::-ms-expand {
+            display: none;
+        }
+        
+        .rating { 
+            display: flex; 
+            gap: 10px; 
+            font-size: 36px;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        
+        .rating span { 
+            cursor: pointer; 
+            opacity: 0.3; 
+            transition: all 0.3s ease;
+            user-select: none;
+        }
+        
+        .rating span:hover { 
+            opacity: 0.7;
+            transform: scale(1.2);
+        }
+        
+        .rating span.active { 
+            opacity: 1;
+            transform: scale(1.1);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 30px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .submit-btn:hover { 
+            background: #1976D2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.4);
+        }
+        
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+        
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .char-count {
+            font-size: 12px;
+            color: #999;
+            text-align: right;
+            margin-top: 5px;
+        }
+        
+        .required {
+            color: #f44336;
+            margin-left: 3px;
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .success-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: bounce 1s;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .feature-chip {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            background: #E3F2FD;
+            color: #2196F3;
+            border-radius: 20px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .feature-chip:hover {
+            background: #2196F3;
+            color: white;
+        }
+        
+        .feature-chip.selected {
+            background: #2196F3;
+            color: white;
+            border-color: #1976D2;
+        }
+        
+        .features-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="form-container">
+            <h1>💬 Feedback</h1>
+            <p class="subtitle">Help us improve AccessMeet!</p>
+            
+            <form id="feedback-form">
+                <!-- Rating -->
+                <div class="form-group">
+                    <label>Overall Experience <span class="required">*</span></label>
+                    <div class="rating" id="rating">
+                        <span data-rating="1" title="Poor">⭐</span>
+                        <span data-rating="2" title="Fair">⭐</span>
+                        <span data-rating="3" title="Good">⭐</span>
+                        <span data-rating="4" title="Very Good">⭐</span>
+                        <span data-rating="5" title="Excellent">⭐</span>
+                    </div>
+                    <p id="rating-text" style="text-align: center; color: #666; font-size: 14px; margin-top: 10px;">
+                        Click to rate your experience
+                    </p>
+                </div>
+                
+                <!-- Features Used -->
+                <div class="form-group">
+                    <label>Which features did you use? <span class="required">*</span></label>
+                    <div class="features-grid" id="features-grid">
+                        <div class="feature-chip" data-feature="sign">🤟 Sign Language Detection</div>
+                        <div class="feature-chip" data-feature="speech">🎤 Speech-to-Text</div>
+                        <div class="feature-chip" data-feature="tts">🔊 Text-to-Speech</div>
+                        <div class="feature-chip" data-feature="chatbot">🤖 AI Chatbot</div>
+                        <div class="feature-chip" data-feature="summary">📝 Video Summary</div>
+                    </div>
+                    <input type="hidden" id="selected-features" name="features" required>
+                </div>
+                
+                <!-- Comments -->
+                <div class="form-group">
+                    <label for="comments">Comments or Suggestions</label>
+                    <textarea 
+                        id="comments" 
+                        name="comments"
+                        placeholder="Tell us what you think... What did you like? What can we improve?"
+                        maxlength="500"
+                    ></textarea>
+                    <div class="char-count">
+                        <span id="char-count">0</span>/500 characters
+                    </div>
+                </div>
+                
+                <!-- Email (Optional) -->
+                <div class="form-group">
+                    <label for="email">Email (Optional - for follow-up)</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        placeholder="your.email@example.com"
+                    >
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submit-btn">Submit Feedback</button>
+            </form>
+        </div>
+        
+        <!-- Success Message -->
+        <div class="success-message" id="success-message">
+            <div class="success-icon">🎉</div>
+            <h2 style="color: #2196F3; margin-bottom: 15px;">Thank You!</h2>
+            <p style="color: #666; margin-bottom: 25px;">
+                Your feedback has been submitted successfully.<br>
+                We appreciate your time and input!
+            </p>
+            <button class="submit-btn" onclick="goHome()">Return to Home</button>
+        </div>
+    </div>
+    
+    <script>
+        let selectedRating = 0;
+        let selectedFeatures = new Set();
+        
+        // Rating functionality
+        document.querySelectorAll('.rating span').forEach(star => {
+            star.addEventListener('click', function() {
+                selectedRating = parseInt(this.dataset.rating);
+                updateRatingDisplay();
+            });
+            
+            star.addEventListener('mouseenter', function() {
+                const hoverRating = parseInt(this.dataset.rating);
+                document.querySelectorAll('.rating span').forEach((s, idx) => {
+                    if (idx < hoverRating) {
+                        s.style.opacity = '0.7';
+                    } else {
+                        s.style.opacity = selectedRating > idx ? '1' : '0.3';
+                    }
+                });
+            });
+        });
+        
+        document.getElementById('rating').addEventListener('mouseleave', function() {
+            updateRatingDisplay();
+        });
+        
+        function updateRatingDisplay() {
+            document.querySelectorAll('.rating span').forEach((star, idx) => {
+                star.classList.toggle('active', idx < selectedRating);
+            });
+            
+            const ratingTexts = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+            const ratingText = document.getElementById('rating-text');
+            if (selectedRating > 0) {
+                ratingText.textContent = ratingTexts[selectedRating];
+                ratingText.style.color = '#2196F3';
+                ratingText.style.fontWeight = '600';
+            } else {
+                ratingText.textContent = 'Click to rate your experience';
+                ratingText.style.color = '#666';
+                ratingText.style.fontWeight = '400';
+            }
+        }
+        
+        // Features selection
+        document.querySelectorAll('.feature-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                const feature = this.dataset.feature;
+                
+                if (selectedFeatures.has(feature)) {
+                    selectedFeatures.delete(feature);
+                    this.classList.remove('selected');
+                } else {
+                    selectedFeatures.add(feature);
+                    this.classList.add('selected');
+                }
+                
+                // Update hidden input
+                document.getElementById('selected-features').value = Array.from(selectedFeatures).join(',');
+            });
+        });
+        
+        // Character counter
+        const commentsTextarea = document.getElementById('comments');
+        const charCount = document.getElementById('char-count');
+        
+        commentsTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+            
+            if (this.value.length > 450) {
+                charCount.style.color = '#f44336';
+            } else {
+                charCount.style.color = '#999';
+            }
+        });
+        
+        // Form submission
+        document.getElementById('feedback-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validation
+            if (selectedRating === 0) {
+                alert('⚠️ Please rate your experience before submitting.');
+                return;
+            }
+            
+            if (selectedFeatures.size === 0) {
+                alert('⚠️ Please select at least one feature you used.');
+                return;
+            }
+            
+            // Disable submit button
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            
+            // Collect form data
+            const feedbackData = {
+                rating: selectedRating,
+                features: Array.from(selectedFeatures),
+                comments: document.getElementById('comments').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+            
+            // Log to console (in production, send to backend)
+            console.log('📊 Feedback submitted:', feedbackData);
+            
+            // Save to localStorage (optional)
+            try {
+                localStorage.setItem('lastFeedback', JSON.stringify(feedbackData));
+            } catch (e) {
+                console.log('Could not save to localStorage');
+            }
+            
+            // Simulate API call
+            setTimeout(() => {
+                // Show success message
+                document.getElementById('form-container').style.display = 'none';
+                document.getElementById('success-message').classList.add('show');
+                
+                // Clear session storage
+                sessionStorage.clear();
+            }, 1000);
+        });
+        
+        // Go to home function
+        function goHome() {
+            // Redirect to home page
+            window.location.href = 'index.html';
+            
+            // If index.html doesn't exist, go to parent directory
+            setTimeout(() => {
+                if (document.referrer) {
+                    window.location.href = document.referrer;
+                } else {
+                    window.close();
+                }
+            }, 100);
+        }
+        
+        // Auto-fill from previous session (if available)
+        window.addEventListener('load', function() {
+            // Check if there's meeting data
+            const meetingData = sessionStorage.getItem('meetingData');
+            if (meetingData) {
+                console.log('📝 Meeting data found:', JSON.parse(meetingData));
+            }
+        });
+    </script>
+</body>
+</html>
